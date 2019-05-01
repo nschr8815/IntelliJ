@@ -19,19 +19,11 @@ public class ServerMain {
                 System.out.println("Accepting Connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Accepted connection from" + clientSocket);
-                OutputStream outputStream = clientSocket.getOutputStream();
-                outputStream.write("Hello World this is Nic\n".getBytes());
-                for (int i = 0; i < 10; i++) {
-                    outputStream.write(("Time is now " + new Date() + "\n").getBytes());
-                    Thread.sleep(100);
-                }
-                clientSocket.close();
-            }
+                ServerWorker worker = new ServerWorker(clientSocket);
+                worker.start();
+        }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
-    }
+        }
 }
