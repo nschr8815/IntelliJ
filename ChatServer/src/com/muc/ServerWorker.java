@@ -30,6 +30,7 @@ public class ServerWorker extends Thread{
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         while ( ( line = reader.readLine()) != null){
+            //Had to download apache refer to point 1
             String[] tokens = StringUtils.split(line);
             if (tokens != null && tokens.length > 0) {
 
@@ -52,3 +53,6 @@ public class ServerWorker extends Thread{
 
 
 }
+
+
+//Point 1- Search for "How to Install StringUtils" and click the first link. Then go into IntelliJ>file>project structure>modules>dependencies>+>navigate to apache folder
