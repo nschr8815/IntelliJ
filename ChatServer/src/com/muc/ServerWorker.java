@@ -39,7 +39,8 @@ public class ServerWorker extends Thread{
             String[] tokens = StringUtils.split(line);
             if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
-                if ("quit".equalsIgnoreCase(line)) {
+                if ("logoff".equalsIgnoreCase(cmd) || "quit".equalsIgnoreCase(cmd)) {
+                    handleLogoff();
                     break;
                 } else if ("login".equalsIgnoreCase(cmd)){
                     handleLogin(outputStream, tokens);
@@ -54,8 +55,21 @@ public class ServerWorker extends Thread{
         clientSocket.close();
     }
 
+    private void handleLogoff() throws IOException{
+        List<ServerWorker> workerList = server.getWorkerList();
+
+        for (ServerWorker worker : workerList){
+            if (!login.equals(worker.getLogin())){
+                String onlineMsg = "User " +login + " is now offline " + "\n";
+                worker.send(onlineMsg);
+            }
+        }
+        clientSocket.close();
+    }
+
 
     public String getLogin() {
+
         return login;
     }
 
@@ -65,15 +79,29 @@ public class ServerWorker extends Thread{
             String password = tokens[2];
 
             if((login.equals("guest") && password.equals("guest")) || (login.equals("SupremeOverlord") && password.equals("adminBest"))){
-                String msg = "Login Valid" + "\n";
+                String msg = "Login Valid, Now Online" + "\n----------------------------------------\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
-                System.out.println("User " + login + " logged in succesfully" );
 
-                String onlineMsg = "User " +login + " is now online " + "\n";
                 List<ServerWorker> workerList = server.getWorkerList();
+
+
+                //Send current user all current online users
+                for (ServerWorker worker : workerList) {
+                    if (!login.equals(worker.getLogin())) {
+                        if (worker.getLogin() != null) {
+                            String msg2 = "User " + worker.getLogin() + " is already online\n";
+                            send(msg2);
+                        }
+                    }
+                }
+                //Send other online users current users status
+
                 for (ServerWorker worker : workerList){
-                    worker.send(onlineMsg);
+                    if (!login.equals(worker.getLogin())){
+                        String onlineMsg = "****************************************\nUser " +login + " is now online " + "\n****************************************\n";
+                        worker.send(onlineMsg);
+                    }
                 }
             }else{
                 String msg = "Login Invalid" + "\n";
@@ -83,7 +111,12 @@ public class ServerWorker extends Thread{
     }
 
     private void send(String msg) throws IOException {
-        outputStream.write(msg.getBytes());
+        if (login != null) {
+
+            outputStream.write(msg.getBytes());
+
+        }
+
     }
 
 
