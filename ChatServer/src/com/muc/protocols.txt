@@ -13,10 +13,22 @@ User and Server
 3. User ---> User
 
     *Direct Messages
-    *Broadcast messages
+    *Broadcast messages / group messaging
 
 
 Commands:
 
     *Login <user> <password>
     *Logoff
+
+
+Direct Messages Format:
+
+    msg <user> <message>
+
+
+group Messages Format:
+
+    join <topic>
+    msg <topic> <msg>
+    send: msg <topic
