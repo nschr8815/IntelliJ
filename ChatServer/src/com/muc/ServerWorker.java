@@ -126,7 +126,7 @@ public class ServerWorker extends Thread{
 
         for (ServerWorker worker : workerList){
             if (!login.equals(worker.getLogin())){
-                String onlineMsg = "User " +login + " is now offline " + "\n";
+                String onlineMsg = "offline: " + login + "\n";
                 worker.send(onlineMsg);
             }
         }
@@ -146,10 +146,8 @@ public class ServerWorker extends Thread{
 
             if((login.equals("guest") && password.equals("guest")) || (login.equals("SupremeOverlord") && password.equals("adminBest"))){
                 String msg = "ok login" + "\n";
-                //String msg = "Login Valid, Now Online" + "\n----------------------------------------\n";
                 outputStream.write(msg.getBytes());
-                //String clear = "\033[H\033[2J" + "\n";
-                //OutputStream.write(clear.getBytes());
+
                 this.login = login;
 
                 List<ServerWorker> workerList = server.getWorkerList();
@@ -159,23 +157,23 @@ public class ServerWorker extends Thread{
                 for (ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         if (worker.getLogin() != null) {
-                            String msg2 = "User " + worker.getLogin() + " is already online\n";
+                            String msg2 = "online: " + worker.getLogin() + "\n";
                             send(msg2);
                         }
                     }
                 }
                 //Send other online users current users status
+                String onlineMsg = "online: " + login + "\n";
 
                 for (ServerWorker worker : workerList){
                     if (!login.equals(worker.getLogin())){
-                        String onlineMsg = "****************************************\nUser " +login + " is now online " + "\n****************************************\n";
                         worker.send(onlineMsg);
                     }
                 }
             }else{
-                String msg = "Login Invalid" + "\n";
+                String msg = "error login" + "\n";
                 outputStream.write(msg.getBytes());
-                System.err.println("Login failed for: " + login);
+                System.err.println("Login failed for" + login);
             }
         }
     }
