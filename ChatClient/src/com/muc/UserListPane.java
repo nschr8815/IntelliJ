@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.Vector;
 
 public class UserListPane extends JPanel implements UserStatusListener {
 
@@ -18,7 +17,8 @@ public class UserListPane extends JPanel implements UserStatusListener {
         this.client = client;
         this.client.addUserStatusListener(this);
 
-        userListUI = new JList<>();
+        userListModel = new DefaultListModel<>();
+        userListUI = new JList<>(userListModel);
         setLayout(new BorderLayout());
         add(new JScrollPane(userListUI), BorderLayout.CENTER);
 
@@ -52,7 +52,7 @@ public class UserListPane extends JPanel implements UserStatusListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
 
-        frame.getContentPane().add(new JScrollPane(userListPane), BorderLayout.CENTER);
+        frame.getContentPane().add(userListPane, BorderLayout.CENTER);
         frame.setVisible(true);
 
         if (client.connect()){

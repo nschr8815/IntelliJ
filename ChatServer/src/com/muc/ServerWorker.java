@@ -4,10 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayDeque;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
 
 
 public class ServerWorker extends Thread{
@@ -24,20 +23,20 @@ public class ServerWorker extends Thread{
 
     public void run(){
         try {
-            clientHandle();
+            handleClientSocket();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-    }  private void clientHandle() throws IOException, InterruptedException {
+    }  private void handleClientSocket() throws IOException, InterruptedException {
         InputStream inputStream = clientSocket.getInputStream();
         this.outputStream = clientSocket.getOutputStream();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
-        while ( ( line = reader.readLine()) != null){
+        while ( (line = reader.readLine()) != null){
             //Had to download apache refer to point 1
             String[] tokens = StringUtils.split(line);
             if (tokens != null && tokens.length > 0) {
@@ -48,7 +47,6 @@ public class ServerWorker extends Thread{
                 } else if ("login".equalsIgnoreCase(cmd)) {
                     handleLogin(outputStream, tokens);
                 }else if ("join".equalsIgnoreCase(cmd)){
-
                     handleJoin(tokens);
                 } else if ("msg".equalsIgnoreCase(cmd)) {
                     String[] tokensMsg = StringUtils.split(line, null, 3);
@@ -126,7 +124,7 @@ public class ServerWorker extends Thread{
 
         for (ServerWorker worker : workerList){
             if (!login.equals(worker.getLogin())){
-                String onlineMsg = "offline: " + login + "\n";
+                String onlineMsg = "offline " + login + "\n";
                 worker.send(onlineMsg);
             }
         }
@@ -135,7 +133,6 @@ public class ServerWorker extends Thread{
 
 
     public String getLogin() {
-
         return login;
     }
 
@@ -144,26 +141,25 @@ public class ServerWorker extends Thread{
             String login = tokens[1];
             String password = tokens[2];
 
-            if((login.equals("guest") && password.equals("guest")) || (login.equals("SupremeOverlord") && password.equals("adminBest"))){
+            if((login.equals("guest") && password.equals("guest")) || (login.equals("jim") && password.equals("jim"))){
                 String msg = "ok login" + "\n";
                 outputStream.write(msg.getBytes());
-
                 this.login = login;
+                System.out.println("User logged in successfully: " + login);
 
                 List<ServerWorker> workerList = server.getWorkerList();
-
 
                 //Send current user all current online users
                 for (ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         if (worker.getLogin() != null) {
-                            String msg2 = "online: " + worker.getLogin() + "\n";
+                            String msg2 = "online " + worker.getLogin() + "\n";
                             send(msg2);
                         }
                     }
                 }
                 //Send other online users current users status
-                String onlineMsg = "online: " + login + "\n";
+                String onlineMsg = "online " + login + "\n";
 
                 for (ServerWorker worker : workerList){
                     if (!login.equals(worker.getLogin())){

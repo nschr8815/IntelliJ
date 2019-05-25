@@ -16,5 +16,18 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://Z:/Google Stuff/commons-lang3-3.9" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://Z:/Google Stuff/commons-lang3-3.9" />
+        </SOURCES>
+        <jarDirectory url="file://Z:/Google Stuff/commons-lang3-3.9" recursive="false" />
+        <jarDirectory url="file://Z:/Google Stuff/commons-lang3-3.9" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>
