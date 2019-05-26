@@ -99,7 +99,6 @@ public class ChatClient {
     private void startMessageReader() {
         Thread t = new Thread(){
             public void run() {
-                System.out.println("Oh yeahhhh");
                 readMessageLoop();
             }
         };
@@ -152,9 +151,7 @@ public class ChatClient {
 
     private void handleOnline(String[] tokens) {
         String login = tokens[1];
-        System.out.println("We reached handleOnline with this stringToken" + tokens[1]);
         for(UserStatusListener listener : userStatusListeners){
-            System.out.println("123");
             listener.online(login);
         }
     }
